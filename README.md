@@ -1,8 +1,17 @@
- Sistema de Gestión de Stock
+Sistema de Gestión de Stock
 
 Trabajo integrador final – Desarrollo de Sistemas Web .
 
- Cómo ejecutarlo
+ Cómo ejecutarlo:
+1. Clonar o descargar el proyecto.
+2. En `appsettings.json`, revisar la cadena de conexión (`DefaultConnection`). Viene configurada para LocalDB; si se usa otra instancia de SQL Server, cambiar el valor de `Server=`.
+3. Abrir una terminal en la carpeta del proyecto (donde está `SistemaStock.csproj`) y ejecutar:
+ dotnet run
+
+
+4. Abrir en el navegador la dirección que aparece en la terminal (por ejemplo `https://localhost:7000`) e ingresar con el usuario y la contraseña de arriba.
+
+
 Ingresar con el usuario inicial:
 
    - Usuario: `admin@stock.com`
