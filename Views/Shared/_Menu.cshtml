@@ -1,0 +1,178 @@
+@{
+    var controlador = ViewContext.RouteData.Values["controller"]?.ToString() ?? string.Empty;
+    var accion = ViewContext.RouteData.Values["action"]?.ToString() ?? string.Empty;
+
+    bool EsControlador(params string[] nombres) =>
+        nombres.Any(n => string.Equals(n, controlador, StringComparison.OrdinalIgnoreCase));
+
+    bool EsAccion(string nombreControlador, string nombreAccion) =>
+        EsControlador(nombreControlador) && string.Equals(nombreAccion, accion, StringComparison.OrdinalIgnoreCase);
+
+    string Activo(bool condicion) => condicion ? "active" : string.Empty;
+
+    var verMaestros = User.IsInRole(RolesSistema.Administrador) || User.IsInRole(RolesSistema.Encargado);
+    var verMovimientos = verMaestros || User.IsInRole(RolesSistema.Operador);
+    var verReportes = verMaestros || User.IsInRole(RolesSistema.Consulta);
+    var esAdmin = User.IsInRole(RolesSistema.Administrador);
+
+    var movimientoAbierto = EsControlador("Movimiento");
+    var maestrosAbierto = EsControlador("Categoria", "Marca", "UnidadMedida", "Proveedor", "Cliente", "Deposito");
+}
+<aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
+    <div class="sidebar-brand">
+        <a asp-controller="Home" asp-action="Index" class="brand-link">
+            <i class="bi bi-boxes brand-image fs-4 ms-3 me-2"></i>
+            <span class="brand-text fw-light">Sistema de Stock</span>
+        </a>
+    </div>
+
+    <div class="sidebar-wrapper">
+        <nav class="mt-2">
+            <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu" data-accordion="false">
+
+                @if (verMaestros)
+                {
+                    <li class="nav-item">
+                        <a asp-controller="Home" asp-action="Index" class="nav-link @Activo(EsControlador("Home"))">
+                            <i class="nav-icon bi bi-speedometer2"></i>
+                            <p>Dashboard</p>
+                        </a>
+                    </li>
+                }
+
+                <li class="nav-header">INVENTARIO</li>
+
+                @if (verMaestros)
+                {
+                    <li class="nav-item">
+                        <a asp-controller="Producto" asp-action="Index" class="nav-link @Activo(EsControlador("Producto"))">
+                            <i class="nav-icon bi bi-box-seam"></i>
+                            <p>Productos</p>
+                        </a>
+                    </li>
+                }
+
+                @if (verMovimientos)
+                {
+                    <li class="nav-item @(movimientoAbierto ? "menu-open" : "")">
+                        <a href="#" class="nav-link @Activo(movimientoAbierto)">
+                            <i class="nav-icon bi bi-arrow-left-right"></i>
+                            <p>
+                                Movimientos
+                                <i class="nav-arrow bi bi-chevron-right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a asp-controller="Movimiento" asp-action="Index" class="nav-link @Activo(EsAccion("Movimiento", "Index"))">
+                                    <i class="nav-icon bi bi-clock-history"></i>
+                                    <p>Historial</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a asp-controller="Movimiento" asp-action="Entrada" class="nav-link @Activo(EsAccion("Movimiento", "Entrada"))">
+                                    <i class="nav-icon bi bi-box-arrow-in-down"></i>
+                                    <p>Entrada</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a asp-controller="Movimiento" asp-action="Salida" class="nav-link @Activo(EsAccion("Movimiento", "Salida"))">
+                                    <i class="nav-icon bi bi-box-arrow-up"></i>
+                                    <p>Salida</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a asp-controller="Movimiento" asp-action="Transferencia" class="nav-link @Activo(EsAccion("Movimiento", "Transferencia"))">
+                                    <i class="nav-icon bi bi-truck"></i>
+                                    <p>Transferencia</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                }
+
+                <li class="nav-item">
+                    <a asp-controller="Stock" asp-action="Index" class="nav-link @Activo(EsControlador("Stock"))">
+                        <i class="nav-icon bi bi-clipboard-data"></i>
+                        <p>Consulta de stock</p>
+                    </a>
+                </li>
+
+                @if (verMaestros)
+                {
+                    <li class="nav-header">MAESTROS</li>
+
+                    <li class="nav-item @(maestrosAbierto ? "menu-open" : "")">
+                        <a href="#" class="nav-link @Activo(maestrosAbierto)">
+                            <i class="nav-icon bi bi-database"></i>
+                            <p>
+                                Datos maestros
+                                <i class="nav-arrow bi bi-chevron-right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a asp-controller="Categoria" asp-action="Index" class="nav-link @Activo(EsControlador("Categoria"))">
+                                    <i class="nav-icon bi bi-tags"></i>
+                                    <p>Categorías</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a asp-controller="Marca" asp-action="Index" class="nav-link @Activo(EsControlador("Marca"))">
+                                    <i class="nav-icon bi bi-award"></i>
+                                    <p>Marcas</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a asp-controller="UnidadMedida" asp-action="Index" class="nav-link @Activo(EsControlador("UnidadMedida"))">
+                                    <i class="nav-icon bi bi-rulers"></i>
+                                    <p>Unidades de medida</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a asp-controller="Proveedor" asp-action="Index" class="nav-link @Activo(EsControlador("Proveedor"))">
+                                    <i class="nav-icon bi bi-building"></i>
+                                    <p>Proveedores</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a asp-controller="Cliente" asp-action="Index" class="nav-link @Activo(EsControlador("Cliente"))">
+                                    <i class="nav-icon bi bi-people"></i>
+                                    <p>Clientes</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a asp-controller="Deposito" asp-action="Index" class="nav-link @Activo(EsControlador("Deposito"))">
+                                    <i class="nav-icon bi bi-houses"></i>
+                                    <p>Depósitos</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                }
+
+                @if (verReportes)
+                {
+                    <li class="nav-header">REPORTES</li>
+                    <li class="nav-item">
+                        <a asp-controller="Reporte" asp-action="Index" class="nav-link @Activo(EsControlador("Reporte"))">
+                            <i class="nav-icon bi bi-file-earmark-bar-graph"></i>
+                            <p>Reporte de movimientos</p>
+                        </a>
+                    </li>
+                }
+
+                @if (esAdmin)
+                {
+                    <li class="nav-header">ADMINISTRACIÓN</li>
+                    <li class="nav-item">
+                        <a asp-controller="Usuario" asp-action="Index" class="nav-link @Activo(EsControlador("Usuario"))">
+                            <i class="nav-icon bi bi-person-gear"></i>
+                            <p>Usuarios</p>
+                        </a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    </div>
+</aside>

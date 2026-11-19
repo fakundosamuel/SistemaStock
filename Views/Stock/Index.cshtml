@@ -1,0 +1,54 @@
+@model StockVm
+@{
+    ViewData["Title"] = "Consulta de stock";
+    ViewData["Subtitle"] = "Stock de cada producto por depósito y total";
+}
+
+<div class="card">
+    <div class="card-body">
+        <table class="table table-striped table-hover align-middle datatable w-100">
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Producto</th>
+                    <th>Categoría</th>
+                    @foreach (var deposito in Model.Depositos)
+                    {
+                        <th class="text-end">@deposito.Nombre</th>
+                    }
+                    <th class="text-end">Total</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var fila in Model.Filas)
+                {
+                    <tr>
+                        <td>@fila.Codigo</td>
+                        <td>@fila.Producto</td>
+                        <td>@fila.Categoria</td>
+                        @foreach (var deposito in Model.Depositos)
+                        {
+                            <td class="text-end">@(fila.PorDeposito.TryGetValue(deposito.Id, out var cantidad) ? cantidad : 0)</td>
+                        }
+                        <td class="text-end fw-bold">@fila.Total</td>
+                        <td>
+                            @if (fila.Total == 0)
+                            {
+                                <span class="badge text-bg-danger">Sin stock</span>
+                            }
+                            else if (fila.Total <= fila.StockMinimo)
+                            {
+                                <span class="badge text-bg-warning">Stock bajo</span>
+                            }
+                            else
+                            {
+                                <span class="badge text-bg-success">Normal</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

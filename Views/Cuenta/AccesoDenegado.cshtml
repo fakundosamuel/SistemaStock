@@ -1,0 +1,10 @@
+@{
+    ViewData["Title"] = "Acceso denegado";
+    ViewData["Subtitle"] = "No tiene permisos para ver esta sección";
+}
+
+<div class="alert alert-danger">
+    <h5 class="alert-heading"><i class="bi bi-shield-lock"></i> Acceso denegado</h5>
+    <p class="mb-0">Su rol no permite acceder a esta función. Si lo necesita, solicite el acceso al administrador.</p>
+</div>
+<a asp-controller="Home" asp-action="Index" class="btn btn-primary">Volver al inicio</a>

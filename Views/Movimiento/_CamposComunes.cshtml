@@ -1,0 +1,14 @@
+@model OperacionVm
+
+<div class="col-md-6 mb-3">
+    <label asp-for="ProductoId" class="form-label"></label>
+    <select asp-for="ProductoId" asp-items="Model.Productos" class="form-select">
+        <option value="">-- Seleccione --</option>
+    </select>
+    <span asp-validation-for="ProductoId" class="text-danger"></span>
+</div>
+<div class="col-md-6 mb-3">
+    <label asp-for="Cantidad" class="form-label"></label>
+    <input asp-for="Cantidad" class="form-control" />
+    <span asp-validation-for="Cantidad" class="text-danger"></span>
+</div>

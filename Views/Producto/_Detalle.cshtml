@@ -1,0 +1,24 @@
+@model ProductoVm
+
+<dl class="row mb-0">
+            <dt class="col-sm-3">@Html.DisplayNameFor(m => m.Codigo)</dt>
+            <dd class="col-sm-9">@Model.Codigo</dd>
+            <dt class="col-sm-3">@Html.DisplayNameFor(m => m.Nombre)</dt>
+            <dd class="col-sm-9">@Model.Nombre</dd>
+            <dt class="col-sm-3">@Html.DisplayNameFor(m => m.Descripcion)</dt>
+            <dd class="col-sm-9">@(string.IsNullOrWhiteSpace(Model.Descripcion) ? "-" : Model.Descripcion)</dd>
+            <dt class="col-sm-3">@Html.DisplayNameFor(m => m.CategoriaNombre)</dt>
+            <dd class="col-sm-9">@Model.CategoriaNombre</dd>
+            <dt class="col-sm-3">@Html.DisplayNameFor(m => m.MarcaNombre)</dt>
+            <dd class="col-sm-9">@(string.IsNullOrWhiteSpace(Model.MarcaNombre) ? "-" : Model.MarcaNombre)</dd>
+            <dt class="col-sm-3">@Html.DisplayNameFor(m => m.UnidadMedidaNombre)</dt>
+            <dd class="col-sm-9">@(string.IsNullOrWhiteSpace(Model.UnidadMedidaNombre) ? "-" : Model.UnidadMedidaNombre)</dd>
+            <dt class="col-sm-3">@Html.DisplayNameFor(m => m.PrecioCosto)</dt>
+            <dd class="col-sm-9">@Model.PrecioCosto.ToString("C2")</dd>
+            <dt class="col-sm-3">@Html.DisplayNameFor(m => m.PrecioVenta)</dt>
+            <dd class="col-sm-9">@Model.PrecioVenta.ToString("C2")</dd>
+            <dt class="col-sm-3">@Html.DisplayNameFor(m => m.StockMinimo)</dt>
+            <dd class="col-sm-9">@Model.StockMinimo</dd>
+            <dt class="col-sm-3">Estado</dt>
+            <dd class="col-sm-9"><partial name="_EstadoBadge" model="Model.Activo" /></dd>
+</dl>

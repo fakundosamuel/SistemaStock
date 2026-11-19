@@ -1,0 +1,21 @@
+@model ProveedorVm
+@{
+    ViewData["Title"] = "Nuevo proveedor";
+    ViewData["Subtitle"] = "Complete los datos solicitados";
+}
+
+<div class="card">
+    <form asp-action="Create" method="post">
+        <div class="card-body">
+            <partial name="_Form" model="Model" />
+        </div>
+        <div class="card-footer d-flex gap-2">
+            <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> Guardar</button>
+            <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,10 @@
+@model MarcaVm
+
+<dl class="row mb-0">
+            <dt class="col-sm-3">@Html.DisplayNameFor(m => m.Nombre)</dt>
+            <dd class="col-sm-9">@(string.IsNullOrWhiteSpace(Model.Nombre) ? "-" : Model.Nombre)</dd>
+            <dt class="col-sm-3">@Html.DisplayNameFor(m => m.Descripcion)</dt>
+            <dd class="col-sm-9">@(string.IsNullOrWhiteSpace(Model.Descripcion) ? "-" : Model.Descripcion)</dd>
+            <dt class="col-sm-3">Estado</dt>
+            <dd class="col-sm-9"><partial name="_EstadoBadge" model="Model.Activo" /></dd>
+</dl>

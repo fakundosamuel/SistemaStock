@@ -1,0 +1,77 @@
+@model MovimientoListaVm
+@{
+    ViewData["Title"] = "Reporte de movimientos";
+    ViewData["Subtitle"] = "Filtre los movimientos y expórtelos a Excel o PDF";
+}
+
+<div class="card mb-3">
+    <div class="card-body">
+        <form asp-action="Index" method="get" class="row g-2 align-items-end">
+            <div class="col-md-4">
+                <label asp-for="Filtro.ProductoId" class="form-label"></label>
+                <select asp-for="Filtro.ProductoId" asp-items="Model.Productos" class="form-select">
+                    <option value="">Todos</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label asp-for="Filtro.Tipo" class="form-label"></label>
+                <select asp-for="Filtro.Tipo" asp-items="Model.Tipos" class="form-select">
+                    <option value="">Todos</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label asp-for="Filtro.Desde" class="form-label"></label>
+                <input asp-for="Filtro.Desde" class="form-control" type="date" />
+            </div>
+            <div class="col-md-2">
+                <label asp-for="Filtro.Hasta" class="form-label"></label>
+                <input asp-for="Filtro.Hasta" class="form-control" type="date" />
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100"><i class="bi bi-funnel"></i> Filtrar</button>
+            </div>
+            <div class="col-12 d-flex gap-2 mt-3">
+                <button type="submit" formaction="@Url.Action("DescargarExcel")" class="btn btn-success">
+                    <i class="bi bi-file-earmark-excel"></i> Descargar Excel
+                </button>
+                <button type="submit" formaction="@Url.Action("DescargarPdf")" class="btn btn-danger">
+                    <i class="bi bi-file-earmark-pdf"></i> Descargar PDF
+                </button>
+                <a asp-action="Index" class="btn btn-secondary">Limpiar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header"><h3 class="card-title mb-0">Vista previa (@Model.Items.Count movimientos)</h3></div>
+    <div class="card-body">
+        <table class="table table-striped align-middle datatable w-100">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Producto</th>
+                    <th>Depósito</th>
+                    <th>Tipo</th>
+                    <th class="text-end">Cantidad</th>
+                    <th>Origen / destino</th>
+                    <th>Usuario</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Items)
+                {
+                    <tr>
+                        <td data-order="@item.Fecha.ToString("yyyyMMddHHmmss")">@item.Fecha.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td>@item.Codigo - @item.Producto</td>
+                        <td>@item.Deposito</td>
+                        <td><span class="badge @item.TipoClase">@item.TipoTexto</span></td>
+                        <td class="text-end">@item.Cantidad</td>
+                        <td>@item.Contraparte</td>
+                        <td>@item.Usuario</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,34 @@
+@model ProductoVm
+@{
+    ViewData["Title"] = "Eliminar producto";
+    ViewData["Subtitle"] = "Confirme la eliminación del registro";
+    var bloqueo = ViewData["Bloqueo"] as string;
+}
+
+@if (bloqueo != null)
+{
+    <div class="alert alert-warning">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>@bloqueo
+    </div>
+}
+else
+{
+    <div class="alert alert-danger">
+        <i class="bi bi-trash me-2"></i>¿Está seguro de eliminar Producto <strong>'@Model.Nombre'</strong> (ID @Model.Id)? Esta acción no se puede deshacer.
+    </div>
+}
+
+<div class="card">
+    <div class="card-body">
+        <partial name="_Detalle" model="Model" />
+    </div>
+    <div class="card-footer">
+        <form asp-action="Delete" asp-route-id="@Model.Id" method="post" class="d-flex gap-2">
+            @if (bloqueo == null)
+            {
+                <button type="submit" class="btn btn-danger"><i class="bi bi-trash"></i> Eliminar</button>
+            }
+            <a asp-action="Index" class="btn btn-secondary">@(bloqueo == null ? "Cancelar" : "Volver al listado")</a>
+        </form>
+    </div>
+</div>

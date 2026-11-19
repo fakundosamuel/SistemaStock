@@ -1,0 +1,43 @@
+@model SalidaVm
+@{
+    ViewData["Title"] = "Registrar salida";
+    ViewData["Subtitle"] = "Egreso de mercadería de un depósito";
+}
+
+<div class="card">
+    <form asp-action="Salida" method="post" class="form-operacion">
+        <div class="card-body">
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+            <div class="row">
+                <partial name="_CamposComunes" model="Model" />
+                <div class="col-md-6 mb-3">
+                    <label asp-for="DepositoId" class="form-label"></label>
+                    <select asp-for="DepositoId" asp-items="Model.Depositos" class="form-select">
+                        <option value="">-- Seleccione --</option>
+                    </select>
+                    <span asp-validation-for="DepositoId" class="text-danger"></span>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="ClienteId" class="form-label"></label>
+                    <select asp-for="ClienteId" asp-items="Model.Clientes" class="form-select">
+                        <option value="">-- Seleccione --</option>
+                    </select>
+                    <span asp-validation-for="ClienteId" class="text-danger"></span>
+                </div>
+                <div class="col-12 mb-3">
+                    <label asp-for="Observaciones" class="form-label"></label>
+                    <textarea asp-for="Observaciones" class="form-control" rows="2"></textarea>
+                    <span asp-validation-for="Observaciones" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer d-flex gap-2">
+            <button type="submit" class="btn btn-danger"><i class="bi bi-box-arrow-up"></i> Registrar salida</button>
+            <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

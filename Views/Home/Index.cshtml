@@ -1,0 +1,91 @@
+@model DashboardVm
+@{
+    ViewData["Title"] = "Dashboard";
+    ViewData["Subtitle"] = "Estado general del negocio";
+}
+
+<div class="row g-3 mb-3">
+    <div class="col-md-6 col-xl-3"><partial name="_Kpi" model='new KpiVm("Productos activos", Model.ProductosActivos.ToString(), "bi-box-seam", "primary")' /></div>
+    <div class="col-md-6 col-xl-3"><partial name="_Kpi" model='new KpiVm("Proveedores", Model.Proveedores.ToString(), "bi-building", "info")' /></div>
+    <div class="col-md-6 col-xl-3"><partial name="_Kpi" model='new KpiVm("Clientes", Model.Clientes.ToString(), "bi-people", "success")' /></div>
+    <div class="col-md-6 col-xl-3"><partial name="_Kpi" model='new KpiVm("Depósitos activos", Model.DepositosActivos.ToString(), "bi-houses", "secondary")' /></div>
+    <div class="col-md-4"><partial name="_Kpi" model='new KpiVm("Valor total del inventario", Model.ValorInventario.ToString("C2"), "bi-cash-stack", "dark")' /></div>
+    <div class="col-md-4"><partial name="_Kpi" model='new KpiVm("Ventas del día", Model.VentasDelDia.ToString("C2"), "bi-cart-check", "warning")' /></div>
+    <div class="col-md-4"><partial name="_Kpi" model='new KpiVm("Movimientos de hoy", Model.MovimientosHoy.ToString(), "bi-arrow-left-right", "danger")' /></div>
+</div>
+
+<div class="row g-3 mb-3">
+    <div class="col-lg-7">
+        <div class="card h-100">
+            <div class="card-header"><h3 class="card-title mb-0">Entradas y salidas de los últimos 7 días</h3></div>
+            <div class="card-body"><canvas id="graficoDias" height="130"></canvas></div>
+        </div>
+    </div>
+    <div class="col-lg-5">
+        <div class="card h-100">
+            <div class="card-header"><h3 class="card-title mb-0">Stock por categoría</h3></div>
+            <div class="card-body"><canvas id="graficoCategorias" height="200"></canvas></div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header"><h3 class="card-title mb-0"><i class="bi bi-exclamation-triangle"></i> Alertas de reposición</h3></div>
+    <div class="card-body">
+        @if (!Model.Alertas.Any())
+        {
+            <p class="text-muted mb-0">No hay productos por debajo del stock mínimo.</p>
+        }
+        else
+        {
+            <table class="table table-striped align-middle datatable w-100">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Categoría</th>
+                        <th>Stock actual</th>
+                        <th>Stock mínimo</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var alerta in Model.Alertas)
+                    {
+                        <tr>
+                            <td>@alerta.Producto</td>
+                            <td>@alerta.Categoria</td>
+                            <td>@alerta.StockActual</td>
+                            <td>@alerta.StockMinimo</td>
+                            <td><span class="badge @alerta.EstadoClase">@alerta.Estado</span></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+    <script>
+        new Chart(document.getElementById('graficoDias'), {
+            type: 'bar',
+            data: {
+                labels: @Json.Serialize(Model.DiasEtiquetas),
+                datasets: [
+                    { label: 'Entradas', data: @Json.Serialize(Model.DiasEntradas), backgroundColor: '#198754' },
+                    { label: 'Salidas', data: @Json.Serialize(Model.DiasSalidas), backgroundColor: '#dc3545' }
+                ]
+            },
+            options: { scales: { y: { beginAtZero: true, ticks: { precision: 0 } } } }
+        });
+
+        new Chart(document.getElementById('graficoCategorias'), {
+            type: 'doughnut',
+            data: {
+                labels: @Json.Serialize(Model.CategoriasEtiquetas),
+                datasets: [{ data: @Json.Serialize(Model.CategoriasStock) }]
+            }
+        });
+    </script>
+}
